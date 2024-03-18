@@ -17,10 +17,10 @@ const User = require("../models/userModel");
 //     res.status(500).send("Internal Server Error");
 //   }
 // });
-productRouter.get("/by-id/:productId", async (req, res) => {
+productRouter.get("/view-product/:name", async (req, res) => {
   try {
-    const id = req.params.productId;
-    const product = await Product.findById(id);
+    const name = req.params.name;
+    const product = await Product.find({ name: name });
     res.status(200).json({ product });
   } catch (error) {
     console.log(error);
@@ -66,7 +66,7 @@ productRouter.get("/filter", async (req, res) => {
   }
 });
 
-productRouter.get(
+productRouter.put(
   "/add-to-cart/:productId",
   authorization,
   async (req, res) => {
@@ -85,7 +85,7 @@ productRouter.get(
         (item) => String(item.productId) === String(product._id)
       );
       if (productExists !== -1) {
-        user.cart[existingProductIndex].quantity++;
+        user.cart[productExists].quantity++;
       } else {
         user.cart.push({
           productId: product._id,
@@ -102,6 +102,38 @@ productRouter.get(
     } catch (error) {
       console.log(error);
       res.status(500).send("Internal Server error");
+    }
+  }
+);
+productRouter.patch(
+  "/update-cart/:productId/:quantity",
+  authorization,
+  async (req, res) => {
+    try {
+      const { productId, quantity } = req.params;
+
+      const userId = req.userId;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      const productIndex = user.cart.findIndex(
+        (item) => String(item.productId) === String(productId)
+      );
+      if (productIndex === -1) {
+        return res.status(404).json({ error: "Product not found in cart" });
+      }
+      user.cart[productIndex].quantity = quantity;
+
+      await user.save();
+      res.status(200).json({ message: "Cart updated successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server error" });
     }
   }
 );
