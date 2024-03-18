@@ -22,13 +22,14 @@ const userSchema = new mongoose.Schema({
   },
   cart: [
     {
-      product: {
-        name: String,
-        color: String,
-        price: Number,
-        productType: String,
-        availability: String,
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
       },
+      name: String,
+      color: String,
+      price: Number,
+      productType: String,
+      availability: String,
       quantity: {
         type: Number,
         required: true,
