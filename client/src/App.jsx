@@ -34,7 +34,7 @@ function App() {
         >
           <Route index element={<Home />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="/view-product" element={<ViewProduct />} />
+          <Route path="/view-product/:productId" element={<ViewProduct />} />
           <Route path="order-confirmation" element={<Confirmation />} />
         </Route>
       </Routes>
