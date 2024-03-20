@@ -11,7 +11,14 @@ const registerValidation = Joi.object({
   cart: Joi.array().optional(),
 });
 const loginValidation = Joi.object({
-  email: Joi.string().email().required().label("Email"),
+  identity: Joi.alternatives()
+    .try(
+      Joi.string().email().label("Email"),
+      Joi.string()
+        .pattern(/^[0-9]{10}$/)
+        .label("Mobile Number")
+    )
+    .required(),
   password: Joi.string().required().label("Password"),
 });
 

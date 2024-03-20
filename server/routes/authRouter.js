@@ -47,20 +47,29 @@ authRouter.post("/register", async (req, res) => {
 
 authRouter.post("/login", async (req, res) => {
   try {
-    const { email, password } = await loginValidation.validateAsync(req.body);
-    const userExists = await User.findOne({ email: email });
+    const { identity, password } = await loginValidation.validateAsync(
+      req.body
+    );
+    const userExists = await User.findOne({
+      $or: [{ email: identity }, { mobileNumber: identity }],
+    });
+
     if (!userExists) {
-      return res.status(203).json({ message: "Email not found" });
+      return res
+        .status(203)
+        .json({ message: "Email or mobile number not found" });
     }
+
     const passwordMatch = await bcrypt.compare(password, userExists.password);
     if (!passwordMatch) {
       return res.status(202).send({ status: "invalid" });
     }
+
     const token = await jwt.sign(
       { userId: userExists._id },
       process.env.JWT_SECRET
     );
-    return res.status(200).json({ token: token, message: "sucess" });
+    return res.status(200).json({ token: token, message: "success" });
   } catch (error) {
     if (error.details) {
       console.log(error.details);

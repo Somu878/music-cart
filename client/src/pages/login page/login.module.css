@@ -1,0 +1,28 @@
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+.formContainer {
+  width: 30vh;
+  border: solid 2px #d0d0d0;
+  border-radius: 7px;
+  padding: 10px;
+}
+.signInSpan {
+  font-weight: 300;
+}
+.title {
+  font-size: 1.1rem;
+}
+
+@media only screen and (min-width: 767px) {
+  .signInSpan {
+    display: none;
+  }
+  .formContainer {
+  }
+}

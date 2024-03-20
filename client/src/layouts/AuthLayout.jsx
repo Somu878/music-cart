@@ -21,7 +21,7 @@ function AuthLayout() {
           <span>Musicart</span>
         </div>
       </div>
-      <div>
+      <div style={{ height: "92vh" }}>
         <Outlet />
       </div>
       <div className={styles.footer}>Musicart | All rights reserved</div>
